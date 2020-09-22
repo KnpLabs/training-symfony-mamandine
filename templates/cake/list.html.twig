@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Mamandine - In cookies we trust</title>
-        <link rel="stylesheet" media="all" href="{{ asset('bundles/app/css/bootstrap.min.css') }}" />
-    </head>
+{% extends 'base.html.twig' %}
+{% block body %}
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="/index.php">Mamandine</a>
+          <a class="navbar-brand">Mamandine</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/create-cake.php">Create cake</a>
-                </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
               <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -29,24 +21,21 @@
                 <h3>Cakes list</h3>
                 <div class="row">
                     {% for cake in cakes %}
-                    <div class="col-sm-3">
-<a href="cake.php?id={{ cake.id }}">
-    <article class="card">
-    <img class="card-img-top" src="{{ cake.image }}" alt="{{ cake.name }}" style="height:300px">
-        <div class="card-body">
-            <p class="card-text">{{ cake.name }} - {{ cake.price }} €</p>
-        </div>
-    </article>
-</a>
-                    </div>
+                        <div class="col-sm-3">
+                            <article class="card">
+                                <img class="card-img-top" src="{{ cake.image }}" alt="{{ cake.name }}">
+                                <div class="card-body">
+                                    <p class="card-text">{{ cake.name }} - {{ cake.price }} €</p>
+                                </div>
+                            </article>
+                        </div>
                     {% endfor %}
                 </div>
             </section>
         </div>
         <div class="navbar navbar-light">
             <div class="container">
-                <p class="navbar-text pull-left">Mamandine - In cookies we trust.</p>
+                <p class="navbar-text text-center">Mamandine - In cookies we trust.</p>
             </div>
         </div>
-    </body>
-</html>
+{% endblock %}
