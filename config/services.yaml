@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    environment: '%env(APP_ENV)%'
+    database_path: "%kernel.project_dir%/var/cakes.sqlite"
+    pdo_dsn: "sqlite:%database_path%"
 
 services:
     # default configuration for services in *this* file
