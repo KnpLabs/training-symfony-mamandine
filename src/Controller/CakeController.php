@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class CakeController extends AbstractController
 {
     private $pdo;
-
 
     public function list()
     {
@@ -30,7 +30,6 @@ class CakeController extends AbstractController
             ->fetch()
         ;
 
-
         if (!$cake) {
             throw $this->createNotFoundException(sprintf('The cake with id "%s" was not found.', $cakeId));
         }
@@ -49,6 +48,25 @@ class CakeController extends AbstractController
             'cake' => $cake,
             'categories' => $categories,
         ]);
+    }
+
+    public function create(Request $request)
+    {
+        if ('POST' === $request->getMethod()) {
+            $name =  $request->get('name');
+            $description =  $request->get('description');
+            $price =  $request->get('price');
+            $image =  $request->get('image');
+            $createdAt = (new \DateTime())->format(\DateTime::RFC3339);
+
+            $this->getPdo()->query('INSERT INTO cake(`name`, `description`, `price`, `created_at`, `image`) VALUES ("'.$name.'", "'.$description.'", "'.$price.'", "'.$createdAt.'", "'.$image.'");');
+
+            $this->addFlash('success', 'The cake has been created');
+
+            return $this->redirectToRoute('app_cake_list');
+        }
+
+        return $this->render('cake/create.html.twig');
     }
 
     private function getPdo()

@@ -8,3 +8,9 @@ app_cake_list:
 app_cake_show:
     path: /cakes/{cakeId}
     controller: App\Controller\CakeController::show
+    requirements:
+        cakeId: '\d+'
+
+app_cake_create:
+    path: /cakes/create
+    controller: App\Controller\CakeController::create
