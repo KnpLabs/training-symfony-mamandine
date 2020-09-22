@@ -4,3 +4,7 @@
 app_cake_list:
     path:     /cakes
     controller: App\Controller\CakeController::list
+
+app_cake_show:
+    path: /cakes/{cakeId}
+    controller: App\Controller\CakeController::show

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div id="container">
+        <section class="container">
+            <article>
+                <h1>{{ cake.name }}</h1>
+                <a class="btn btn-light" href="{{ path('app_cake_list') }}"> &crarr; Back to list</a>
+                <div class="media">
+                    <img class="d-flex align-self-start mr-3" src="{{ cake.image }}" alt="{{ cake.name }}" style="height:500px">
+                    <div class="media-body">
+                        <p><button class="btn btn-primary">Purchase for <strong>{{ cake.price }} €</strong></button></p>
+                        <p>
+                            {% for category in categories %}
+                                <span class="badge badge-secondary">{{ category.name }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>{{ cake.description }}</p>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </div>
+{% endblock %}
