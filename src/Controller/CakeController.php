@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\FormType\CakeType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -52,21 +53,29 @@ class CakeController extends AbstractController
 
     public function create(Request $request)
     {
-        if ('POST' === $request->getMethod()) {
-            $name =  $request->get('name');
-            $description =  $request->get('description');
-            $price =  $request->get('price');
-            $image =  $request->get('image');
-            $createdAt = (new \DateTime())->format(\DateTime::RFC3339);
+        $form = $this->createForm(CakeType::class);
+        $form->handleRequest($request);
 
-            $this->getPdo()->query('INSERT INTO cake(`name`, `description`, `price`, `created_at`, `image`) VALUES ("'.$name.'", "'.$description.'", "'.$price.'", "'.$createdAt.'", "'.$image.'");');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
 
-            $this->addFlash('success', 'The cake has been created');
+            $name = $data['name'];
+            $description = $data['description'];
+            $price = $data['price'];
+            $createdAt = new \DateTime();
+            $image = $data['image'];
+
+            $this->getPdo()->query('INSERT INTO cake(`name`, `description`, `price`, `image`) VALUES ("'.$name.'", "'.$description.'", "'.$price.'", "'.$image.'");');
+
+
+            $this->addFlash('success', 'Cake created !');
 
             return $this->redirectToRoute('app_cake_list');
         }
 
-        return $this->render('cake/create.html.twig');
+        return $this->render('cake/create.html.twig', [
+            'form'   => $form->createView(),
+        ]);
     }
 
     private function getPdo()
