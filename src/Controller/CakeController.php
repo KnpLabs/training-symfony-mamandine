@@ -3,87 +3,82 @@
 namespace App\Controller;
 
 use App\FormType\CakeType;
+use App\Repository\CakeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class CakeController extends AbstractController
 {
-    private $pdo;
-
-    public function list()
+    public function list(CakeRepository $cakeRepository)
     {
-        $cakes = $this
-            ->getPdo()
-            ->query('SELECT * FROM cake ORDER BY created_at DESC')
-            ->fetchAll()
-        ;
-
         return $this->render('cake/list.html.twig', [
-            'cakes' => $cakes,
+            'cakes' => $cakeRepository->findAll(),
         ]);
     }
 
-    public function show($cakeId)
+    public function show(CakeRepository $cakeRepository,$cakeId)
     {
-        $cake = $this
-            ->getPdo()
-            ->query(sprintf('SELECT * FROM cake WHERE id = %d', $cakeId))
-            ->fetch()
-        ;
+        $cake = $cakeRepository->find($cakeId);
 
         if (!$cake) {
             throw $this->createNotFoundException(sprintf('The cake with id "%s" was not found.', $cakeId));
         }
 
-        $categories = $this
-            ->getPdo()
-            ->query(sprintf('
-                SELECT * FROM category
-                INNER JOIN cake_category ON category.id = cake_category.category_id
-                WHERE cake_category.cake_id = %d
-            ', $cakeId))
-            ->fetchAll()
-        ;
+        $categories = $cake->getCategories();
 
         return $this->render('cake/show.html.twig', [
-            'cake' => $cake,
+            'cake'  => $cake,
             'categories' => $categories,
         ]);
     }
 
     public function create(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(CakeType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $em = $this->getDoctrine()->getManager();
 
-            $name = $data['name'];
-            $description = $data['description'];
-            $price = $data['price'];
-            $createdAt = new \DateTime();
-            $image = $data['image'];
+            $cake = $form->getData();
+            $em->persist($cake);
+            $em->flush();
 
-            $this->getPdo()->query('INSERT INTO cake(`name`, `description`, `price`, `image`) VALUES ("'.$name.'", "'.$description.'", "'.$price.'", "'.$image.'");');
+            $this->addFlash('success', 'The cake has been created');
 
-
-            $this->addFlash('success', 'Cake created !');
-
-            return $this->redirectToRoute('app_cake_list');
+            return $this->redirectToRoute('cake_list');
         }
 
-        return $this->render('cake/create.html.twig', [
-            'form'   => $form->createView(),
-        ]);
+        return $this->render('cake/create.html.twig', ['form' => $form->createView()],);
     }
 
-    private function getPdo()
+    public function edit(Request $request, CakeRepository $cakeRepository, $cakeId)
     {
-        if (null === $this->pdo) {
-            $this->pdo = new \PDO($this->getParameter('pdo_dsn'));
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $cake = $cakeRepository->find($cakeId);
+
+        if (!$cake) {
+            throw $this->createNotFoundException(sprintf('The cake with id "%s" was not found.', $cakeId));
         }
 
-        return $this->pdo;
+        $form = $this->createForm(CakeType::class,$cake);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $cake = $form->getData();
+            $em->flush();
+
+            $this->addFlash('success', 'The cake has been created');
+
+            return $this->redirectToRoute('cake_list');
+        }
+
+        return $this->render('cake/create.html.twig', ['form' => $form->createView()],);
     }
+
 }

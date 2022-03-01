@@ -5,7 +5,7 @@ services:
     restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: example
+      MYSQL_DATABASE: mamandine
   adminer:
     image: adminer
     restart: on-failure
