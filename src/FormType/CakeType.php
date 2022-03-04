@@ -2,10 +2,12 @@
 
 namespace App\FormType;
 
+use App\Entity\Cake;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CakeType extends AbstractType
@@ -40,5 +42,13 @@ class CakeType extends AbstractType
                 ],
             ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            // this form type would be able to populate our domain object :)
+            'data_class' => Cake::class,
+        ));
     }
 }

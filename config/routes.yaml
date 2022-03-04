@@ -1,16 +1,19 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-app_cake_list:
-    path:     /cakes
+cake_list:
+    path: /cakes
     controller: App\Controller\CakeController::list
 
-app_cake_show:
+cake_show:
     path: /cakes/{cakeId}
     controller: App\Controller\CakeController::show
     requirements:
         cakeId: '\d+'
 
-app_cake_create:
+cake_create:
     path: /cakes/create
     controller: App\Controller\CakeController::create
+
+cake_edit:
+    path: /cakes/{cakeId}/edit
+    controller: App\Controller\CakeController::edit
+    requirements:
+        cakeId: '\d+'

@@ -5,7 +5,7 @@
         <section class="container">
             <article>
                 <h1>{{ cake.name }}</h1>
-                <a class="btn btn-light" href="{{ path('app_cake_list') }}"> &crarr; Back to list</a>
+                <a class="btn btn-light" href="{{ path('cake_list') }}"> &crarr; Back to list</a>
                 <div class="media">
                     <img class="d-flex align-self-start mr-3" src="{{ cake.image }}" alt="{{ cake.name }}" style="height:500px">
                     <div class="media-body">
@@ -16,6 +16,7 @@
                             {% endfor %}
                         </p>
                         <p>{{ cake.description }}</p>
+                        <a class="nav-link"  href="{{ path('cake_edit',{'cakeId': cake.id }) }}">Edit cake</a>
                     </div>
                 </div>
             </article>

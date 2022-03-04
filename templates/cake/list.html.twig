@@ -3,11 +3,11 @@
 {% block content %}
     <div id="container">
         <section class="container">
-            <h3>Cakes list</h3>
+            <h3>Cake list</h3>
             <div class="row">
                 {% for cake in cakes %}
                     <div class="col-sm-3">
-                        <a href="{{ path('app_cake_show', {'cakeId': cake.id }) }}">
+                        <a href="{{ path('cake_show', {'cakeId': cake.id }) }}">
                             <article class="card">
                                 <img class="card-img-top" src="{{ cake.image }}" alt="{{ cake.name }}">
                                 <div class="card-body">
