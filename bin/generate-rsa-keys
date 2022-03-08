@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Usage : generate-rsa-keys path/to/destination
+
+echo $1
+
+if [ -z "$1" ]
+    then
+        echo "You must specify a path to generate the rsa keys in."
+        exit 1
+fi
+
+if ! [ -d "$1" ]
+    then
+        echo "'$1' is not a directory. Please specify a valid directory path."
+        exit 1
+fi
+
+if [ -f "$1"/.ssh/private.pem ]
+    then
+        echo "RSA keys already exists."
+        exit 0
+fi
+
+mkdir -p "$1"/.ssh
+cd "$1"/.ssh
+openssl genrsa -out private.pem 4096
+openssl rsa -in private.pem -pubout -outform PEM -out public.pem
+chmod 400 private.pem public.pem
+
+echo "Key pair generated in '$1/.ssh' directory."
+
+exit 0

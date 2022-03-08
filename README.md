@@ -20,6 +20,12 @@ docker-compose exec php bin/console doctrine:migrations:migrate
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
 
+Generate RSA keys
+
+```
+docker-compose exec php bin/generate-rsa-keys var
+```
+
 Compile CSS/JS
 
 ```
