@@ -1,7 +1,9 @@
 security:
-    encoders:
+    enable_authenticator_manager: true
+    password_hashers:
         App\Entity\User:
             algorithm: auto
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -21,19 +23,16 @@ security:
             pattern: ^/api
             stateless: true
             provider: app_user_provider
-            guard:
-                authenticators: ['App\Security\JWTAuthenticator']
+            custom_authenticators:
+                - 'App\Security\JWTAuthenticator'
         main:
-            anonymous: true
             lazy: true
             provider: app_user_provider
-            guard:
-                authenticators:
-                    - App\Security\SecurityAuthenticator
+            custom_authenticators:
+                - App\Security\SecurityAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+                target: cake_list
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
