@@ -12,6 +12,10 @@ cake_create:
     path: /cakes/create
     controller: App\Controller\CakeController::create
 
+cake_search:
+    path: /cakes/search
+    controller: App\Controller\CakeController::search
+
 cake_edit:
     path: /cakes/{cakeId}/edit
     controller: App\Controller\CakeController::edit

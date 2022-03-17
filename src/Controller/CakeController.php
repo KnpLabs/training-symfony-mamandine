@@ -16,7 +16,18 @@ class CakeController extends AbstractController
         ]);
     }
 
-    public function show(CakeRepository $cakeRepository,$cakeId)
+    public function search(Request $request, CakeRepository $cakeRepository)
+    {
+        $cakes = $cakeRepository->search(
+            $request->query->get('q')
+        );
+
+        return $this->render('cake/list.html.twig', [
+            'cakes' => $cakes,
+        ]);
+    }
+
+    public function show(CakeRepository $cakeRepository, $cakeId)
     {
         $cake = $cakeRepository->find($cakeId);
 
