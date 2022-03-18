@@ -7,3 +7,32 @@ article.card {
 .navbar-text {
     width: 100%;
 }
+
+.cookie-banner {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: -200px;
+    left: 0;
+    right: 0;
+    background-color: #2f3640;
+    color: #f5f6fa;
+    padding: 20px 32px;
+    transition: bottom 400ms ease-out;
+}
+
+.cookie-banner.active {
+    bottom: 0px;
+}
+
+.cookie-banner .content {
+    display: flex;
+    flex-direction: column;
+}
+
+.cookie-banner button {
+    width: 200px;
+    height: 50Px;
+    align-self: center;
+    margin: 20px;
+}

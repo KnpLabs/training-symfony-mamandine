@@ -17,3 +17,7 @@ cake_edit:
     controller: App\Controller\CakeController::edit
     requirements:
         cakeId: '\d+'
+
+static_cookie_policy:
+    path: /cookie-policy
+    controller: App\Controller\StaticPagesController::cookies

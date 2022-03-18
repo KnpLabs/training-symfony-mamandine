@@ -52,6 +52,15 @@
                 <p class="navbar-text text-center">Mamandine - In cookies we trust.</p>
             </div>
         </div>
+        <div class="cookie-banner">
+            <div class="content">
+                <h3>We Care About Your Privacy</h3>
+                <p>We and our partners store and/or access information on a device, such as unique IDs in cookies to process personal data.</p>
+                <p>Details are available on our <a href="{{ path('static_cookie_policy') }}">Privacy policy page</a>.</p>
+            </div>
+            <button class="btn btn-info">I accept</button>
+        </div>
+
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
 
