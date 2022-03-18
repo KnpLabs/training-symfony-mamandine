@@ -23,7 +23,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Compile CSS/JS
 
 ```
-docker-compose exec php bin/console yarn run encore dev
+yarn run encore dev
 ```
 
 ## Credentials
