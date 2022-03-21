@@ -49,10 +49,21 @@ class Cake
      */
     private $created_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="cake", orphanRemoval=true)
+     */
+    private $orders;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $buyable;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->created_at = new \DateTime();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,5 +153,25 @@ class Cake
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function getBuyable(): ?bool
+    {
+        return $this->buyable;
+    }
+
+    public function setBuyable(?bool $buyable): self
+    {
+        $this->buyable = $buyable;
+
+        return $this;
     }
 }
