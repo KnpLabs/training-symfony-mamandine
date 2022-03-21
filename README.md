@@ -29,3 +29,17 @@ yarn run encore dev
 ## Credentials
 
 **Compte admin:** admin@mail.com admin
+
+## Documentation
+
+- **Repository**
+  - [Use Doctrine Query Builder](doc/query-builder.md)
+- **Security**
+  - [Security Component with Guard](doc/create-api-with-guard-and-jwt.md)
+  - [Upgrade Security Component to use Passport](doc/upgrade-security-component.md)
+- **Cookie Banner**
+  - [Implement a cookie consent banner](doc/cookie-consent.md)
+- **Commands**
+  - [Create a Symfony Command to anonymize user informations](doc/create-symfony-command.md)
+- **XML Parser**
+  - [Use Symfony Serializer](doc/use-symfony-serializer.md)
