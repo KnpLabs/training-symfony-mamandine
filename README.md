@@ -43,3 +43,5 @@ yarn run encore dev
   - [Create a Symfony Command to anonymize user informations](doc/create-symfony-command.md)
 - **XML Parser**
   - [Use Symfony Serializer](doc/use-symfony-serializer.md)
+- **Forms**
+  - [Order a cake](doc/order-a-cake.md)
