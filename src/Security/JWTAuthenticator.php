@@ -9,20 +9,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class JWTAuthenticator extends AbstractGuardAuthenticator
+class JWTAuthenticator extends AbstractAuthenticator
 {
     private Encoder $encoder;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(Encoder $encoder)
+    public function __construct(Encoder $encoder, UserProviderInterface $userProvider)
     {
         $this->encoder = $encoder;
+        $this->userProvider = $userProvider;
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         if (!$authHeader = $request->headers->get('Authorization')) {
             return false;
@@ -31,43 +35,31 @@ class JWTAuthenticator extends AbstractGuardAuthenticator
         return (bool) preg_match('/^bearer /i', $authHeader);
     }
 
-    public function getCredentials(Request $request)
+    public function authenticate(Request $request): Passport
     {
-        return preg_replace(
-            '/^bearer /i',
-            '',
-            $request->headers->get('Authorization', '')
-        );
-    }
+        $token = $this->resolveTokenFromRequest($request);
 
-    /**
-     * @param mixed $credentials
-     */
-    public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
-    {
+        if (null === $token) {
+            throw new Exception('No API token provided.');
+        }
+
         try {
-            $token = $this->encoder->decode($credentials);
+            $decodedToken = $this->encoder->decode($token);
         } catch (Exception $e) {
-            return null;
+            throw new Exception('The API token is invalid.');
         }
 
-        if ($token->isExpired(new DateTime())) {
-            return null;
+        if ($decodedToken->isExpired(new DateTime())) {
+            throw new Exception('The API token is expired.', 401);
         }
 
-        if (!($username = UsernameResolver::resolveUsername($token))) {
-            return null;
+        if (!($username = UsernameResolver::resolveUsername($decodedToken))) {
+            throw new Exception('The API token is expired.', 401);
         }
 
-        return $userProvider->loadUserByUsername($username);
-    }
-
-    /**
-     * @param mixed $credentials
-     */
-    public function checkCredentials($credentials, UserInterface $user): bool
-    {
-        return true;
+        return new SelfValidatingPassport(new UserBadge($username, function ($userIdentifier) {
+            return $this->userProvider->loadUserByIdentifier($userIdentifier);
+        }));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
@@ -80,13 +72,12 @@ class JWTAuthenticator extends AbstractGuardAuthenticator
         return new JsonResponse(null, 401);
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): ?Response
+    private function resolveTokenFromRequest(Request $request): ?string
     {
-        return new JsonResponse(null, 401);
-    }
-
-    public function supportsRememberMe(): bool
-    {
-        return false;
+        return preg_replace(
+            '/^bearer /i',
+            '',
+            $request->headers->get('Authorization', '')
+        );
     }
 }

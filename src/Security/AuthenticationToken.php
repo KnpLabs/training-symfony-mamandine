@@ -13,7 +13,7 @@ class AuthenticationToken implements JWT
     public function __construct($data, int $duration = 3600)
     {
         $this->data = [
-            'username' => $data->getUsername(),
+            'username' => $data->getUserIdentifier(),
             'email' => $data->getEmail()
         ];
 

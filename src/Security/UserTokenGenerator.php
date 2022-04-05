@@ -5,24 +5,24 @@ namespace App\Security;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserTokenGenerator
 {
     private UserProviderInterface $userProvider;
-    private EncoderFactoryInterface $encoderFactory;
+    private UserPasswordHasherInterface $passwordHasher;
     private Encoder $encoder;
 
     public function __construct(
         UserProviderInterface $userProvider,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         Encoder $encoder
     ) {
         $this->userProvider = $userProvider;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->encoder = $encoder;
     }
 
@@ -30,10 +30,10 @@ class UserTokenGenerator
     {
         try {
             $username = $this->resolveUsernameFromRequest($request);
-            $this->userProvider->loadUserByUsername($username);
+            $this->userProvider->loadUserByIdentifier($username);
 
             return true;
-        } catch (UsernameNotFoundException $e) {
+        } catch (UserNotFoundException $e) {
             return false;
         }
     }
@@ -42,18 +42,14 @@ class UserTokenGenerator
     {
         try {
             $username = $this->getUsername($request);
-            $user = $this->userProvider->loadUserByUsername($username);
-        } catch (UsernameNotFoundException $e) {
+            $user = $this->userProvider->loadUserByIdentifier($username);
+        } catch (UserNotFoundException $e) {
             throw new Exception('Bad credentials.', 401);
         }
 
-        $passwordEncoder = $this->encoderFactory->getEncoder($user);
-        $userPassword = $user->getPassword() ?? '';
-
-        if (!$passwordEncoder->isPasswordValid(
-            $userPassword,
-            $this->getPassword($request),
-            $user->getSalt()
+        if (!$this->passwordHasher->isPasswordValid(
+            $user,
+            $this->getPassword($request)
         )) {
             throw new Exception('Bad credentials.', 401);
         }
@@ -65,8 +61,8 @@ class UserTokenGenerator
     {
         try {
             $username = $this->getUsernameFromToken($request);
-            $user = $this->userProvider->loadUserByUsername($username);
-        } catch (UsernameNotFoundException|InvalidArgumentException $e) {
+            $user = $this->userProvider->loadUserByIdentifier($username);
+        } catch (UserNotFoundException|InvalidArgumentException $e) {
             // can be an invalid argument exception thrown during JWT decode
             throw new Exception('Invalid Token.', 401);
         }
