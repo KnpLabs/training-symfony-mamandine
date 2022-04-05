@@ -15,7 +15,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class JWTAuthenticator extends AbstractGuardAuthenticator
 {
-    private $encoder;
+    private Encoder $encoder;
 
     public function __construct(Encoder $encoder)
     {

@@ -6,9 +6,9 @@ use DateTimeImmutable;
 
 class AuthenticationToken implements JWT
 {
-    private $data;
-    private $issuedAt;
-    private $expireAt;
+    private array $data;
+    private \DateTimeImmutable $issuedAt;
+    private \DateTimeImmutable $expireAt;
 
     public function __construct($data, int $duration = 3600)
     {
