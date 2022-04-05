@@ -1,0 +1,29 @@
+framework:
+  workflows:
+    order_validation:
+      type: 'workflow'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'currentPlace'
+      supports:
+        - App\Entity\Order
+      initial_marking: in_review
+      places:
+        - in_review
+        - validated
+        - rejected
+        - cancelled
+      transitions:
+        cancel:
+          from: in_review
+          to:   cancelled
+        validate:
+          guard: "is_granted('ROLE_ADMIN')"
+          from: in_review
+          to:   validated
+        reject:
+          guard: "is_granted('ROLE_ADMIN')"
+          from: in_review
+          to:   rejected

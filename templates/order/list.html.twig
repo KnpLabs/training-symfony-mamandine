@@ -1,0 +1,40 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+<section class="container">
+    <article>
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Cake</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ order.cake.name }}</th>
+                        <td>{{ order.number }}</td>
+                        <td>
+                            {{ order.validationStatus }}
+                        </td>
+                        <td>
+                        {% if workflow_can(order, 'cancel') %}
+                            <a class="btn btn-primary" href="{{ path('order_cancel', {'orderId': order.id }) }}"> Cancel </a>
+                        {% endif %}
+                        {% if workflow_can(order, 'validate') %}
+                            <a class="btn btn-success"> Validate </a>
+                        {% endif %}
+                        {% if workflow_can(order, 'reject') %}
+                            <a class="btn btn-warning"> Reject </a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</section>
+{% endblock %}

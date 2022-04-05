@@ -21,3 +21,11 @@ cake_edit:
 order_create:
     path: /order/create
     controller: App\Controller\OrderController::create
+
+order_list:
+    path: /order/list
+    controller: App\Controller\OrderController::list
+
+order_cancel:
+    path: /order/{orderId}/cancel
+    controller: App\Controller\OrderController::cancel
