@@ -45,3 +45,5 @@ yarn run encore dev
   - [Use Symfony Serializer](doc/use-symfony-serializer.md)
 - **Forms**
   - [Order a cake](doc/order-a-cake.md)
+- **Workflow**
+  - [Order workflow](doc/order-workflow.md)
