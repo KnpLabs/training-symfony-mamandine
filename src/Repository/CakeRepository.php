@@ -73,7 +73,7 @@ class CakeRepository extends ServiceEntityRepository
     // }
 
     // Final version
-    public function search(string $search = null): array
+    public function search(string $search = null, int $page = 1): array
     {
         $qb = $this->createQueryBuilder('cake');
 
@@ -84,11 +84,30 @@ class CakeRepository extends ServiceEntityRepository
             ;
         }
 
+
         return $qb
             ->orderBy('cake.name', 'ASC')
+            ->setFirstResult(($page - 1) * 10)
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    public function countAll(string $search = null): int
+    {
+        $qb = $this->createQueryBuilder('cake')->select('count(cake.id)');
+
+        if ($search) {
+            $qb
+                ->andWhere($qb->expr()->like('cake.name', ':search'))
+                ->setParameter('search', '%'.$search.'%')
+            ;
+        }
+
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
         ;
     }
 }

@@ -1,0 +1,40 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div id="container">
+        <section class="container">
+            <h3>Cake list</h3>
+            <div class="row mt-3">
+                {% for cake in cakes %}
+                    <div class="col-sm-3">
+                        <a href="{{ path('cake_show', {'cakeId': cake.id }) }}">
+                            <article class="card">
+                                <img class="card-img-top" src="{{ cake.image }}" alt="{{ cake.name }}">
+                                <div class="card-body">
+                                    <p class="card-text">{{ cake.name }} - {{ cake.price }} €</p>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination mt-3">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('cake_search', { page: currentPage - 1, q: search }) }}">Prev</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('cake_search', { page: currentPage, q: search }) }}">{{ currentPage }}</a>
+                    </li>
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('cake_search', { page: currentPage + 1, q: search }) }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </section>
+    </div>
+{% endblock %}
