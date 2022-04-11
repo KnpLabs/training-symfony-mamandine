@@ -47,3 +47,5 @@ yarn run encore dev
   - [Order a cake](doc/order-a-cake.md)
 - **Workflow**
   - [Order workflow](doc/order-workflow.md)
+- **Optimization**
+  - [Pagination](doc/pagination.md)
