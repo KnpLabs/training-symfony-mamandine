@@ -21,10 +21,10 @@ class CakeFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
         $categories = $this->categories->findAll();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $cake = new Cake();
             $cake->setName($faker->word());
-            $cake->setDescription($faker->paragraph());
+            $cake->setDescription($faker->paragraph(1));
             $cake->setPrice($faker->randomFloat(2, 10, 100));
             $cake->setImage($faker->imageUrl(640, 480, 'cake', true));
             $cake->addCategory($categories[$faker->numberBetween(0, 9)]);

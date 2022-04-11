@@ -18,12 +18,21 @@ class CakeController extends AbstractController
 
     public function search(Request $request, CakeRepository $cakeRepository)
     {
+        $page = $request->query->get('page') ?? 1;
+        $search = $request->query->get('q');
+
+        $countCakes = $cakeRepository->countAll($search);
+
         $cakes = $cakeRepository->search(
-            $request->query->get('q')
+            $search,
+            $page
         );
 
-        return $this->render('cake/list.html.twig', [
+        return $this->render('cake/search.html.twig', [
             'cakes' => $cakes,
+            'search' => $search,
+            'currentPage' => $page,
+            'totalPages' => $countCakes / 10
         ]);
     }
 
