@@ -12,6 +12,18 @@ cake_create:
     path: /cakes/create
     controller: App\Controller\CakeController::create
 
+import_users:
+    path: /import/users
+    controller: App\Controller\DefaultController::importUsers
+
+compute_progressbar_percentage:
+    path: /compute-progressbar-percentage
+    controller: App\Controller\DefaultController::computeProgressbarPercentage
+
+import:
+    path: /import
+    controller: App\Controller\DefaultController::import
+
 cake_edit:
     path: /cakes/{cakeId}/edit
     controller: App\Controller\CakeController::edit
