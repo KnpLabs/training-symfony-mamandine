@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Entity\Cake;
 use App\Entity\User;
+use App\Repository\CakeRepository;
 use App\Repository\UserRepository;
 use App\Services\Importer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ImportUserFromXMLCommand extends Command
+class ImportCakeFromXMLCommand extends Command
 {
     private EntityManagerInterface $manager;
     private Importer $importer;
@@ -28,8 +30,8 @@ class ImportUserFromXMLCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('app:import-users-from-xml')
-            ->setDescription('Database user import from XML file (user.xml)')
+            ->setName('app:import-cakes-from-xml')
+            ->setDescription('Database cakes import from XML file (cakes.xml)')
             ->addOption(
                 'force',
                 'f',
@@ -53,30 +55,29 @@ class ImportUserFromXMLCommand extends Command
             }
         }
 
-        $userRepository = $this->manager->getRepository(User::class);
+        $cakeRepository = $this->manager->getRepository(Cake::class);
 
-        $io->section('Import users');
-        $this->importUsers($userRepository, $io);
+        $io->section('Import cakes');
+        $this->importCakes($cakeRepository, $io);
 
         return Command::SUCCESS;
     }
 
-    private function importUsers(
-        UserRepository $repository,
+    private function importCakes(
+        CakeRepository $repository,
         SymfonyStyle $io
     ): void {
-        $users = $this->importer->importUsers();
+        $cakes = $this->importer->importCakes();
 
-        $io->progressStart(count($users));
+        $io->progressStart(count($cakes));
 
-        foreach ($users as $user) {
-            $existingUser = $repository->findOneBy(['email' => $user->getEmail()]);
+        foreach ($cakes as $cake) {
+            $existingCake = $repository->findOneBy(['name' => $cake->getName()]);
 
-            if($existingUser === null) {
+            if($existingCake === null) {
                 usleep(500000);
-                $user->setRoles(['ROLE_USER']);
 
-                $this->manager->persist($user);
+                $this->manager->persist($cake);
             }
 
             $io->progressAdvance();
