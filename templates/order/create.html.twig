@@ -1,0 +1,19 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+<section class="container">
+    <article>
+        {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_row(form.number, { 'attr': { 'class' : 'form-control' }}) }}
+                {{ form_errors(form.number) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.cake, { 'attr': { 'class' : 'form-control' }}) }}
+                {{ form_errors(form.cake) }}
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary">
+        {{ form_end(form) }}
+    </article>
+</section>
+{% endblock %}

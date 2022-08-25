@@ -17,3 +17,7 @@ cake_edit:
     controller: App\Controller\CakeController::edit
     requirements:
         cakeId: '\d+'
+
+order_create:
+    path: /order/create
+    controller: App\Controller\OrderController::create

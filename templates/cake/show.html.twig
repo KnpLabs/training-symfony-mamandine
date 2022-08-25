@@ -9,7 +9,11 @@
                 <div class="media">
                     <img class="d-flex align-self-start mr-3" src="{{ cake.image }}" alt="{{ cake.name }}" style="height:500px">
                     <div class="media-body">
-                        <p><button class="btn btn-primary">Purchase for <strong>{{ cake.price }} €</strong></button></p>
+                        <p>
+                            <a href="{{ path('order_create') }}" class="btn btn-primary">
+                                Purchase for <strong>{{ cake.price }} €</strong>
+                            </a>
+                        </p>
                         <p>
                             {% for category in categories %}
                                 <span class="badge badge-secondary">{{ category.name }}</span>
