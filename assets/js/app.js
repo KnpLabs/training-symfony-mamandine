@@ -12,3 +12,17 @@ import '../css/app.css';
 // import $ from 'jquery';
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+
+const cookieBanner = document.querySelector('.cookie-banner');
+const cookieButton = document.querySelector('.cookie-banner .btn');
+
+cookieButton.addEventListener('click', () => {
+  cookieBanner.classList.remove('active');
+  localStorage.setItem('cookiesAccepted', 'true');
+});
+
+setTimeout(() => {
+  if (!localStorage.getItem('cookiesAccepted')) {
+    cookieBanner.classList.add('active');
+  }
+}, 2000);
